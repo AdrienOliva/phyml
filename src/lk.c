@@ -3367,8 +3367,11 @@ void Ancestral_Sequences(t_tree *tree, int print)
     }
 
   for(i=0;i<2*tree->n_otu-2;i++)
-    if(tree->a_nodes[i]->tax == NO)
-      Ancestral_Sequences_One_Node(tree->a_nodes[i],tree,print);
+
+    if(tree->a_nodes[i]->tax == NO) {
+        tree->a_nodes[i]->c_seq_anc = (align *) malloc(sizeof(align));
+        Ancestral_Sequences_One_Node(tree->a_nodes[i], tree, print);
+    }
 
   if(tree->n_root) Ancestral_Sequences_One_Node(tree->n_root,tree,print);
 
@@ -3381,7 +3384,9 @@ void Ancestral_Sequences(t_tree *tree, int print)
 
 void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
 {
-  if(d->tax) return;
+
+
+    if(d->tax) return;
   else
     {
       if(tree->is_mixt_tree) 
@@ -3403,6 +3408,10 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
           phydbl *Pij0, *Pij1, *Pij2;          
           phydbl inc,sum_scale;
           FILE *fp;
+            phydbl ProbMax;
+            double Res, Var, I;
+            double Epsi=0.000000001;
+            double K=0.1;
 
           unsigned const int ncatg = tree->mod->ras->n_catg;
           unsigned const int ns = tree->mod->ns;
@@ -3422,9 +3431,12 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
           fp = tree->io->fp_out_ancestral;
           assert(fp != NULL);
 
-          
           p = (phydbl *)mCalloc(ns,sizeof(phydbl));
-              
+            d->c_seq_anc->len = tree->data->init_len;
+            d->c_seq_anc->state = (char*) malloc(sizeof(char)*d->c_seq_anc->len);
+            d->c_seq_anc->state[d->c_seq_anc->len]='\0';
+
+
           for(site=0;site<tree->data->init_len;site++) // For each site in the current partition element
             {
               csite = tree->data->sitepatt[site];
@@ -3612,7 +3624,30 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
               for(i=0;i<ns;i++) p[i] = log(p[i]) - (phydbl)LOG2 * sum_scale;
               for(i=0;i<ns;i++) p[i] -= tree->c_lnL_sorted[csite];
               for(i=0;i<ns;i++) p[i] = exp(p[i]);
-              
+              Var=Get_Variance(p,ns);
+              Res = -(K/(Var + Epsi));
+              I = 1 - (exp(Res));
+              if(I > 0.5){
+                  d->c_seq_anc->state[site]='-';
+              }
+              else{
+                  ProbMax=Get_Max_Arr(p,ns);
+                  if(ns==4){
+                      if(ProbMax==p[0]){
+                          d->c_seq_anc->state[site]='A';
+                      }
+                      else if(ProbMax==p[1]){
+                          d->c_seq_anc->state[site]='C';
+                      }
+                      else if(ProbMax==p[2]){
+                          d->c_seq_anc->state[site]='G';
+                      }
+                      else if(ProbMax==p[3]){
+                          d->c_seq_anc->state[site]='T';
+                      }
+                  }
+              }
+
               /* sum_probas = 0.0; */
               /* for(i=0;i<ns;i++) sum_probas += p[i]; */
               /* for(i=0;i<ns;i++) p[i]/=sum_probas; */
@@ -3636,7 +3671,9 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                       Exit("\n");
                     }
                 }
-            }
+
+            }//fin du rock fort
+            puts(d->c_seq_anc->state);
           Free(p);
         }
     }

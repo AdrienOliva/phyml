@@ -5464,3 +5464,44 @@ phydbl Reflected(phydbl x, phydbl down, phydbl up)
 
   return(ref);
 }
+
+/*/MAX of an array of data, given as input////////////////////
+////////////////////////////////////////////////////////////*/
+phydbl Get_Max_Arr(phydbl t[], int nb_state){
+  int i=0;
+    phydbl max;
+  max=t[i];
+  for (i=1;i < nb_state;i++)
+  {
+    if (t[i] > max)
+    {
+      max = t[i];
+    }
+  }
+
+    return(max);
+}
+
+
+/*/Variance of an array of data, given as input///////////////
+////////////////////////////////////////////////////////////*/
+double Get_Variance(phydbl t[],int nb_state){
+
+    int i;
+    double sum=0,sumsqr=0,mean,value,variance;
+
+    for(i=0;i<nb_state;i++)
+    {
+        sum=sum+t[i];
+    }
+
+    mean=sum/nb_state;
+    sumsqr=0;
+    for(i=0;i<nb_state;i++)
+    {
+        value=t[i]-mean;
+        sumsqr=sumsqr+value*value;
+    }
+    variance=sumsqr/nb_state;
+    return(variance);
+}

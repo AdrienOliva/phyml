@@ -2196,7 +2196,6 @@ void Print_Site_Lk(t_tree *tree, FILE *fp)
 void Print_Seq(FILE *fp, align **data, int n_otu)
 {
   int i,j;
-
   PhyML_Fprintf(fp,"%d\t%d\n",n_otu,data[0]->len);
   for(i=0;i<n_otu;i++)
     {

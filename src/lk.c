@@ -3321,7 +3321,9 @@ int Check_Lk_At_Given_Edge(int verbose, t_tree *tree)
 void Ancestral_Sequences(t_tree *tree, int print)
 {
   int i,i_temp;
-    align *temp[tree->data->n_otu-2];
+//    align *temp[tree->data->n_otu-2];
+    align **temp;
+    temp = (align **)mCalloc(tree->data->n_otu-1,sizeof(align *));
 
     char *r = (char *)mCalloc((int)strlen(tree->io->in_align_file)+50,sizeof(char));
     strcpy(r,tree->io->in_align_file);
@@ -3388,8 +3390,14 @@ void Ancestral_Sequences(t_tree *tree, int print)
 
     Print_Seq(fp2,temp,tree->data->n_otu-2);
     fclose(fp2);
-//    Free_Seq_Anc(temp,tree->data->n_otu-2);
+    Free_Seq_Anc(temp,tree->data->n_otu-2);
   fclose(tree->io->fp_out_ancestral);
+
+    for(i=0;i<2*tree->n_otu-2;i++) {
+        if (tree->a_nodes[i]->tax == NO) {
+            tree->a_nodes[i]->c_seq_anc = NULL;
+        }
+    }
 }
 
 //////////////////////////////////////////////////////////////
@@ -3446,9 +3454,9 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             d->c_seq_anc->len=tree->data->init_len;
 
             //creating the name outputed in the file
-            char interm[6];
+            char interm[T_MAX_NAME];
             sprintf(interm,"%d",d->num);
-            char *node_name=(char *) mCalloc(11, sizeof(char));
+            char *node_name=(char *) mCalloc(T_MAX_NAME, sizeof(char));
             strcpy(node_name,"x");
             strcat(node_name,interm);
             d->c_seq_anc->name=node_name;

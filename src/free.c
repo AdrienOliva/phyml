@@ -105,7 +105,7 @@ void Free_Node(t_node *n)
   Free(n->s_outgrp);
   Free(n->cal);
 
-  if(n->c_seq_anc != NULL) 
+  if(n->c_seq_anc != NULL)
     {
       Free(n->c_seq_anc->state);
       Free(n->c_seq_anc);
@@ -269,18 +269,16 @@ void Free_Seq(align **d, int n_otu)
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
 
-void Free_Seq_Anc(align **d, int n_otu)
+void Free_Seq_Anc(align **d, int n_elem)
 {
     int i;
-    for(i=0;i<n_otu;i++)
+    for(i=0;i<n_elem;i++)
     {
-//        printf("\n%s",d[i]->state);
-//        Free(d[i]->name);
-//        Free(d[i]->d_state);
+        Free(d[i]->name);
+        Free(d[i]->d_state);
         Free(d[i]->state);
         Free(d[i]);
-
-    }
+        }
     Free(d);
 }
 

@@ -3650,7 +3650,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                         sum_probas += p[i];
                     }
                     PhyML_Fprintf(fp, "\n");
-                    fflush(NULL);
+//                    fflush(NULL);
                     if (Are_Equal(sum_probas, 1.0, 0.01) == NO) {
                         PhyML_Fprintf(stderr, "\n. Probabilities do not sum to 1.0! Aborting.");
                         for (i = 0; i < ns; ++i) PhyML_Fprintf(stderr, "\n. p[%2d]=%G", i, p[i]);

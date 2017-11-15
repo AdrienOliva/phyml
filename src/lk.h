@@ -100,8 +100,6 @@ phydbl Invariant_Lk(int fact_sum_scale, int site, int *num_prec_issue, t_tree *t
 
 
 
-
-
 phydbl Lk_Core_One_Class_Eigen_Lr(phydbl *dot_prod, phydbl *expl, int ns);
 phydbl Lk_Core_One_Class_No_Eigen_Lr(phydbl *p_lk_left, phydbl *p_lk_rght, phydbl *Pij,phydbl *pi, int ns, int ambiguity_check, int state);
 

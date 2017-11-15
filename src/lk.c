@@ -3406,30 +3406,32 @@ void Ancestral_Sequences(t_tree *tree, int print)
 void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
 {
 
-  if(d->tax) return;
-  else {
+    if(d->tax) return;
+    else {
         if (tree->is_mixt_tree) {
             MIXT_Ancestral_Sequences_One_Node(d, tree, print);
         } else {
 
             t_node *v0, *v1, *v2; // three neighbours of d
             t_edge *b0, *b1, *b2;
-            int i, j, ProbMax;
+            int i, j, code;
+            int *ProbMax;
             int catg;
             char nuc;
+            int *Order_Proba;
+            int *Order_CTabl;
+
 
             phydbl p0, p1, p2;
             phydbl *p;
-            int site, csite;
+            int site, csite, OrderMin;
             phydbl *p_lk0, *p_lk1, *p_lk2;
             int *sum_scale0, *sum_scale1, *sum_scale2;
             phydbl sum_probas;
             phydbl *Pij0, *Pij1, *Pij2;
             phydbl inc, sum_scale;
             FILE *fp;
-            phydbl Res, Var, I;
-            phydbl Epsi = 0.000000001;
-            phydbl K = 0.1;
+            phydbl C;
 
             unsigned const int ncatg = tree->mod->ras->n_catg;
             unsigned const int ns = tree->mod->ns;
@@ -3451,17 +3453,17 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             p = (phydbl *) mCalloc(ns, sizeof(phydbl));
 
             //Initialing the "Align" object
-            d->c_seq_anc->len=tree->data->init_len;
+            d->c_seq_anc->len = tree->data->init_len;
 
             //creating the name outputed in the file
             char interm[T_MAX_NAME];
-            sprintf(interm,"%d",d->num);
-            char *node_name=(char *) mCalloc(T_MAX_NAME, sizeof(char));
-            strcpy(node_name,"x");
-            strcat(node_name,interm);
-            d->c_seq_anc->name=node_name;
+            sprintf(interm, "%d", d->num);
+            char *node_name = (char *) mCalloc(T_MAX_NAME, sizeof(char));
+            strcpy(node_name, "x");
+            strcat(node_name, interm);
+            d->c_seq_anc->name = node_name;
 
-            d->c_seq_anc->state = (char *) mCalloc(tree->data->init_len+1, sizeof(char *));
+            d->c_seq_anc->state = (char *) mCalloc(tree->data->init_len + 1, sizeof(char *));
             d->c_seq_anc->state[d->c_seq_anc->len] = '\0';
 //            free(d->c_seq_anc->state);
 
@@ -3626,16 +3628,53 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] = log(p[i]) - (phydbl) LOG2 * sum_scale;
                 for (i = 0; i < ns; i++) p[i] -= tree->c_lnL_sorted[csite];
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
-                Var = Covariance(p, p, ns);
-                Res = -(K / (Var + Epsi));
-                I = 1 - (exp(Res));
-                if (I > 0.5) {
-                    d->c_seq_anc->state[site] = '-';
-                } else {
-                    ProbMax = Get_Max_Arr(p, ns);
-                    nuc = Reciproc_Assign_State(ProbMax, tree->io->datatype);
-                    d->c_seq_anc->state[site] = nuc;
+
+//  Creating the array with all the distances matrices
+                phydbl *C_Tabl = (phydbl *) mCalloc(ns, sizeof(phydbl));
+
+//  OrderProba is the array of ordered probas (Descending) p[Order_Proba[0]] > p[Order_Proba[1]] etc...
+                Order_Proba=Ranks(p,ns);
+
+//  Here we are computing all matrix that we are putting inside the array (C_1 in [0] , C_2 in [1] etc...)
+                for (i = 1; i <= ns; i++) {
+                    C = 0.0;
+                    for (j = 0; j < ns; j++) {
+                        if(j<i){
+                            C= C + ((p[Order_Proba[j]] - (1.0 / i)) * (p[Order_Proba[j]] - (1.0 / i)));
+                        }
+                        else{
+                            C=C+(p[Order_Proba[j]] - 0) * (p[Order_Proba[j]] - 0);
+                        }
+                    }
+
+                    C_Tabl[i - 1] = C;
                 }
+
+                Order_CTabl=Ranks(C_Tabl,ns); // OrderCTabl get all matrix ordered C_Tabl[Order_CTabl[0]] > C_Tabl[Order_CTabl[1]]
+                OrderMin = Order_CTabl[ns-1]; // OrderMin = The minimum matrixes values that will correspond to the C_OrderMin+1
+
+                if(OrderMin==ns-1){ //If we go here, it is a gap because same Proba for each char
+                    d->c_seq_anc->state[site] = '-';
+                }
+                else{
+                    ProbMax=(int *) mCalloc(OrderMin+1, sizeof(int)); // Then put in ProbMax all Probas that we want to check, if it is C_2 (mean that 2 character are ambiguous) the best value OrderMin would be = 1 so ProbMax will contain indice OrderProba[0] & OrderProba[1]
+                    for(i=0;i<=OrderMin;i++){
+                        ProbMax[i]=Order_Proba[i];
+                    }
+
+                    code=IUPAC_Code(ProbMax,OrderMin+1); //Then we are sending this array to this function to get the corresponding values in
+
+                    nuc = Reciproc_Assign_State(code, tree->io->datatype);
+                    d->c_seq_anc->state[site] = nuc;
+                    Free(ProbMax);
+
+                }
+
+
+                Free(Order_Proba);
+                Free(Order_CTabl);
+                Free(C_Tabl);
+
 
                 /* sum_probas = 0.0; */
                 /* for(i=0;i<ns;i++) sum_probas += p[i]; */
@@ -3657,7 +3696,6 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                         Exit("\n");
                     }
                 }
-
             }
             Free(p);
         }
@@ -3665,6 +3703,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
 }
 
 //////////////////////////////////////////////////////////////
+
 //////////////////////////////////////////////////////////////
 // Computes the value of fact_sum_scale, the part of the scaling factors
 // that is common to all classes of the mixture and scale the 

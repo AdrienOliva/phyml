@@ -2567,19 +2567,101 @@ int Assign_State(char *c, int datatype, int stepsize)
 }
 
 //////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+int IUPAC_Code(int *Proba_Array, int NbProba){
+    int code=67;
+    int *OrderProba;
+    if(NbProba==1){
+        return(Proba_Array[0]);
+    }
+    else{
+
+        phydbl *Cpy_Proba_Array = (phydbl *) mCalloc(NbProba, sizeof(phydbl));
+        for(int i = 0; i < NbProba; ++i) {
+            Cpy_Proba_Array[i] = (phydbl)Proba_Array[i];
+        }
+        OrderProba=Ranks(Cpy_Proba_Array,NbProba);
+        Free(Cpy_Proba_Array);
+
+        if(NbProba==2){
+            if(Proba_Array[OrderProba[0]]== 3){
+                if(Proba_Array[OrderProba[1]]==0){
+                   code=6;
+                }
+                else if(Proba_Array[OrderProba[1]]==1){
+                    code=8;
+                }
+                else if(Proba_Array[OrderProba[1]]==2){
+                    code=9;
+                }
+            }
+            else if(Proba_Array[OrderProba[0]]== 2){
+                if(Proba_Array[OrderProba[1]]==0){
+                    code=5;
+                }
+                else if(Proba_Array[OrderProba[1]]==1){
+                    code=7;
+                }
+            }
+            else if(Proba_Array[OrderProba[0]]== 1){
+                if(Proba_Array[OrderProba[1]]==0){
+                    code=4;
+                }
+            }
+        }
+        else if(NbProba==3){
+            if(Proba_Array[OrderProba[0]]==3){
+                if(Proba_Array[OrderProba[1]]==2){
+                    if(Proba_Array[OrderProba[2]]==1){
+                        code=10;
+                    }
+                    else{
+                        code=11;
+                    }
+                }
+                else{
+                    code=12;
+                }
+            }
+            else if(Proba_Array[OrderProba[0]]==2){
+                code=13;
+            }
+        }
+        else{
+            code=66;
+        } // if it is an error
+    }
+    return(code);
+}
+///////////////////////////////////////////////NULL///////////
+
 //////////////////////////////////////////////////////////////
 
 char Reciproc_Assign_State(int i_state, int datatype)
 {
   if(datatype == NT)
     {
-      i_state = i_state%4;
-      switch(i_state)
+//        i_state = i_state%4;
+        switch(i_state)
         {
         case 0 :   {return 'A';  break;}
         case 1 :   {return 'C';  break;}
         case 2 :   {return 'G';  break;}
         case 3 :   {return 'T';  break;}
+        case 4 :   {return 'M';  break;}
+        case 5 :   {return 'R';  break;}
+        case 6 :   {return 'W';  break;}
+        case 7 :   {return 'S';  break;}
+        case 8 :   {return 'Y';  break;}
+        case 9 :   {return 'K';  break;}
+        case 10 :   {return 'B';  break;}
+        case 11 :   {return 'D';  break;}
+        case 12 :   {return 'H';  break;}
+        case 13 :   {return 'V';  break;}
+        case 66 :   {return 'X';  break;}
+
+
         default  :
           {
             PhyML_Printf("\n. i_state = %d",i_state);

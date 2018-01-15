@@ -3415,23 +3415,20 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             t_node *v0, *v1, *v2; // three neighbours of d
             t_edge *b0, *b1, *b2;
             int i, j, code;
-            int *ProbMax;
             int catg;
             char nuc;
-            int *Order_Proba;
-            int *Order_CTabl;
 
-
+            phydbl Alpha2=(1.0/2.0);
+            phydbl Alpha3=(2.0/3.0);
             phydbl p0, p1, p2;
             phydbl *p;
-            int site, csite, OrderMin;
+            int site, csite;
             phydbl *p_lk0, *p_lk1, *p_lk2;
             int *sum_scale0, *sum_scale1, *sum_scale2;
             phydbl sum_probas;
             phydbl *Pij0, *Pij1, *Pij2;
             phydbl inc, sum_scale;
             FILE *fp;
-            phydbl C;
 
             unsigned const int ncatg = tree->mod->ras->n_catg;
             unsigned const int ns = tree->mod->ns;
@@ -3629,51 +3626,17 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] -= tree->c_lnL_sorted[csite];
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
 
-//  Creating the array with all the distances matrices
-                phydbl *C_Tabl = (phydbl *) mCalloc(ns, sizeof(phydbl));
 
-//  OrderProba is the array of ordered probas (Descending) p[Order_Proba[0]] > p[Order_Proba[1]] etc...
-                Order_Proba=Ranks(p,ns);
+                code=MME_Function(p,Alpha2,Alpha3);
 
-//  Here we are computing all matrix that we are putting inside the array (C_1 in [0] , C_2 in [1] etc...)
-                for (i = 1; i <= ns; i++) {
-                    C = 0.0;
-                    for (j = 0; j < ns; j++) {
-                        if(j<i){
-                            C= C + ((p[Order_Proba[j]] - (1.0 / i)) * (p[Order_Proba[j]] - (1.0 / i)));
-                        }
-                        else{
-                            C=C+(p[Order_Proba[j]] - 0) * (p[Order_Proba[j]] - 0);
-                        }
-                    }
-
-                    C_Tabl[i - 1] = C;
-                }
-
-                Order_CTabl=Ranks(C_Tabl,ns); // OrderCTabl get all matrix ordered C_Tabl[Order_CTabl[0]] > C_Tabl[Order_CTabl[1]]
-                OrderMin = Order_CTabl[ns-1]; // OrderMin = The minimum matrixes values that will correspond to the C_OrderMin+1
-
-                if(OrderMin==ns-1){ //If we go here, it is a gap because same Proba for each char
-                    d->c_seq_anc->state[site] = '-';
+                if(code==66){
+                    nuc='-';
                 }
                 else{
-                    ProbMax=(int *) mCalloc(OrderMin+1, sizeof(int)); // Then put in ProbMax all Probas that we want to check, if it is C_2 (mean that 2 character are ambiguous) the best value OrderMin would be = 1 so ProbMax will contain indice OrderProba[0] & OrderProba[1]
-                    for(i=0;i<=OrderMin;i++){
-                        ProbMax[i]=Order_Proba[i];
-                    }
-
-                    code=IUPAC_Code(ProbMax,OrderMin+1); //Then we are sending this array to this function to get the corresponding values in
-
                     nuc = Reciproc_Assign_State(code, tree->io->datatype);
-                    d->c_seq_anc->state[site] = nuc;
-                    Free(ProbMax);
-
                 }
 
-
-                Free(Order_Proba);
-                Free(Order_CTabl);
-                Free(C_Tabl);
+                d->c_seq_anc->state[site] = nuc;
 
 
                 /* sum_probas = 0.0; */

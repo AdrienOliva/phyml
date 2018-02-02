@@ -3106,6 +3106,7 @@ void Sample_Ancestral_Seq_Pre(t_node *a, t_node *d, t_edge *b,
 
 void Map_Mutations(t_node *a, t_node *d, int sa, int sd, t_edge *b, int site, int rate_cat, int *muttype, phydbl *muttime, int *n_mut, t_tree *tree)
 {
+
   int i,j;
   phydbl *probs,*all_probs;
   int slast; // Last state visited
@@ -3417,9 +3418,9 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             int i, j, code;
             int catg;
             char nuc;
-
-            phydbl Alpha2=(1.0/2.0);
-            phydbl Alpha3=(2.0/3.0);
+            phydbl Alpha1=(3.0/4.0);
+            phydbl Alpha2=(3.0/4.0);
+            phydbl Alpha3=(3.0/4.0);
             phydbl p0, p1, p2;
             phydbl *p;
             int site, csite;
@@ -3627,7 +3628,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
 
 
-                code=MME_Function(p,Alpha2,Alpha3);
+                code=MME_Function(p,Alpha1,Alpha2,Alpha3);
 
                 if(code==66){
                     nuc='-';

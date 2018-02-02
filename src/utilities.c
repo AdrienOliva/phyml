@@ -2569,27 +2569,16 @@ int Assign_State(char *c, int datatype, int stepsize)
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-int MME_Function(phydbl *Proba_Array,phydbl Alpha2, phydbl Alpha3){
+int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3){
   //ACGT is the order of the Proba_Array
     phydbl PA,PC,PG,PT,PR,PY,PS,PW,PK,PM,PB,PD,PH,PV,PN;
     int indice_min;
+    printf("\n%f", Alpha2);
 
-    PA=(Proba_Array[0]*0.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-    PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*0.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-    PG=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*0.0)+(Proba_Array[3]*1.0);
-    PT=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*0.0);
-
-//    PR=(Proba_Array[0]*(1.0/2.0))+(Proba_Array[1]*1.0)+(Proba_Array[2]*(1.0/2.0))+(Proba_Array[3]*1.0);
-//    PY=(Proba_Array[0]*1.0)+(Proba_Array[1]*(1.0/2.0))+(Proba_Array[2]*1.0)+(Proba_Array[3]*(1.0/2.0));
-//    PS=(Proba_Array[0]*1.0)+(Proba_Array[1]*(1.0/2.0))+(Proba_Array[2]*(1.0/2.0))+(Proba_Array[3]*1.0);
-//    PW=(Proba_Array[0]*(1.0/2.0))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*(1.0/2.0));
-//    PK=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*(1.0/2.0))+(Proba_Array[3]*(1.0/2.0));
-//    PM=(Proba_Array[0]*(1.0/2.0))+(Proba_Array[1]*(1.0/2.0))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-//
-//    PB=(Proba_Array[0]*1.0)+(Proba_Array[1]*(2.0/3.0))+(Proba_Array[2]*(2.0/3.0))+(Proba_Array[3]*(2.0/3.0));
-//    PD=(Proba_Array[0]*(2.0/3.0))+(Proba_Array[1]*1.0)+(Proba_Array[2]*(2.0/3.0))+(Proba_Array[3]*(2.0/3.0));
-//    PH=(Proba_Array[0]*(2.0/3.0))+(Proba_Array[1]*(2.0/3.0))+(Proba_Array[2]*1.0)+(Proba_Array[3]*(2.0/3.0));
-//    PV=(Proba_Array[0]*(2.0/3.0))+(Proba_Array[1]*(2.0/3.0))+(Proba_Array[2]*(2.0/3.0))+(Proba_Array[3]*1.0);
+    PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
+    PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
+    PG=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*(Alpha1))+(Proba_Array[3]*1.0);
+    PT=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*(Alpha1));
 
     PR=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
     PY=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));

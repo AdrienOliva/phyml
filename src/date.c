@@ -705,7 +705,7 @@ phydbl *DATE_MCMC(t_tree *tree)
           
           mean_r = RATES_Average_Substitution_Rate(tree);
           post = Get_Lk(tree) + tree->rates->c_lnL_times + tree->rates->c_lnL_rates;
-          
+
           PhyML_Fprintf(fp_stats,"\n%6d\t%9.1f\t%9.1f\t%9.1f\t%9.1f\t%12G\t%12G\t%12G\t%12G\t%12G\t%12G\t",
                         tree->mcmc->run,
                         post,

@@ -2566,47 +2566,17 @@ int Assign_State(char *c, int datatype, int stepsize)
   return -1;
 }
 
-//////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////
-int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3){
-  //ACGT is the order of the Proba_Array
-    phydbl PA,PC,PG,PT,PR,PY,PS,PW,PK,PM,PB,PD,PH,PV,PN;
-    int indice_min;
-    printf("\n%f", Alpha2);
-
-    PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-    PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-    PG=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*(Alpha1))+(Proba_Array[3]*1.0);
-    PT=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*(Alpha1));
-
-    PR=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
-    PY=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));
-    PS=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
-    PW=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));
-    PK=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*(Alpha2));
-    PM=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
-
-    PB=(Proba_Array[0]*(3.0-(3*Alpha3)))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
-    PD=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(3.0-(3*Alpha3)))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
-    PH=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(3.0-(3*Alpha3)))+(Proba_Array[3]*(Alpha3));
-    PV=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(3.0-(3*Alpha3)));
-
-    PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
-
-//    printf("Pa=%f / Pc=%f / Pg=%f / Pt=%f \n",Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
-//    printf("PA= %f / PC= %f / PG= %f / PT= %f / PM= %f / PR= %f / PW= %f / PS= %f / PY= %f / PK= %f / PB= %f / PD= %f / PH= %f / PV= %f / PN= %f \n",PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN);
-
-    phydbl TableProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
-    indice_min=Get_Min_Arr(TableProb,15);
-
-    if(indice_min==14){
-        indice_min=66;
+/////////////////////////////////////////////////////////////
+int MinimumPostProba(phydbl *Proba_Array, int NombreState, phydbl Limit){
+    int i;
+    int nuc=66;
+    for (i = 0; i < NombreState; i++){
+        if(Proba_Array[i]>=Limit){
+            nuc=i;
+        }
     }
-    return(indice_min);
+    return(nuc);
 }
-//////////////////////////////////////////////////////////////
-
 //////////////////////////////////////////////////////////////
 int IUPAC_Code(int *Proba_Array, int NbProba){
     int code=67;

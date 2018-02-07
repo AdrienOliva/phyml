@@ -3418,7 +3418,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             int i, j, code;
             int catg;
             char nuc;
-            phydbl Alpha1=(3.0/4.0);
+            phydbl Alpha1=(0.0/1.0);
             phydbl Alpha2=(3.0/4.0);
             phydbl Alpha3=(3.0/4.0);
             phydbl p0, p1, p2;

@@ -2587,10 +2587,10 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
     PK=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*(Alpha2));
     PM=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
 
-    PB=(Proba_Array[0]*(3.0-(3*Alpha3)))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
-    PD=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(3.0-(3*Alpha3)))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
-    PH=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(3.0-(3*Alpha3)))+(Proba_Array[3]*(Alpha3));
-    PV=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(3.0-(3*Alpha3)));
+    PB=(Proba_Array[0]*(3.0-(3.0*Alpha3)))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
+    PD=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(3.0-(3.0*Alpha3)))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
+    PH=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(3.0-(3.0*Alpha3)))+(Proba_Array[3]*(Alpha3));
+    PV=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(3.0-(3.0*Alpha3)));
 
     PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
 

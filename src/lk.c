@@ -3418,7 +3418,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             int i, j, code;
             int catg;
             char nuc;
-            phydbl limitproba=1.0;
+            phydbl limitproba=0.25;
             phydbl p0, p1, p2;
             phydbl *p;
             int site, csite;

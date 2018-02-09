@@ -2568,12 +2568,11 @@ int Assign_State(char *c, int datatype, int stepsize)
 
 /////////////////////////////////////////////////////////////
 int MinimumPostProba(phydbl *Proba_Array, int NombreState, phydbl Limit){
-    int i;
+    int maxi;
     int nuc=66;
-    for (i = 0; i < NombreState; i++){
-        if(Proba_Array[i]>=Limit){
-            nuc=i;
-        }
+    maxi=Get_Max_Arr(Proba_Array,NombreState);
+    if(Proba_Array[maxi]>=Limit){
+            nuc=maxi;
     }
     return(nuc);
 }

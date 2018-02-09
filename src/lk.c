@@ -3629,7 +3629,6 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 code=MinimumPostProba(p,ns,limitproba);
                 nuc =  Reciproc_Assign_State(code, tree->io->datatype);
 
-
                 d->c_seq_anc->state[site] = nuc;
 
 

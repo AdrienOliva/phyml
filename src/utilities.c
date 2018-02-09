@@ -2573,7 +2573,6 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
   //ACGT is the order of the Proba_Array
     phydbl PA,PC,PG,PT,PR,PY,PS,PW,PK,PM,PB,PD,PH,PV,PN;
     int indice_min;
-    printf("\n%f", Alpha2);
 
     PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
     PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
@@ -2594,8 +2593,6 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
 
     PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
 
-//    printf("Pa=%f / Pc=%f / Pg=%f / Pt=%f \n",Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
-//    printf("PA= %f / PC= %f / PG= %f / PT= %f / PM= %f / PR= %f / PW= %f / PS= %f / PY= %f / PK= %f / PB= %f / PD= %f / PH= %f / PV= %f / PN= %f \n",PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN);
 
     phydbl TableProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
     indice_min=Get_Min_Arr(TableProb,15);
@@ -2698,7 +2695,6 @@ char Reciproc_Assign_State(int i_state, int datatype)
         case 11 :   {return 'D';  break;}
         case 12 :   {return 'H';  break;}
         case 13 :   {return 'V';  break;}
-        case 66 :   {return 'X';  break;}
 
 
         default  :

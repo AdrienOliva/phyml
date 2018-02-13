@@ -3627,16 +3627,20 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] -= tree->c_lnL_sorted[csite];
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
 
+                if(tree->io->datatype==0){
+                    code=MME_Function(p,Alpha1,Alpha2,Alpha3);
+                }
+                else if(tree->io->datatype==1){
+                    code=Get_Max_Arr(p,ns);
+                }
 
-                code=MME_Function(p,Alpha1,Alpha2,Alpha3);
 
-                if(code==66){
+                if(code==66){ /*means that it is a gap*/
                     nuc='-';
                 }
                 else{
                     nuc = Reciproc_Assign_State(code, tree->io->datatype);
                 }
-
                 d->c_seq_anc->state[site] = nuc;
 
 

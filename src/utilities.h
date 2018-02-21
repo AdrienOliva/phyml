@@ -2022,6 +2022,7 @@ int Get_State_From_Ui(int ui,int datatype);
 int Assign_State(char *c,int datatype,int stepsize);
 char Reciproc_Assign_State(int i_state,int datatype);
 int IUPAC_Code(int *Proba_Array, int NbProba);
+int Return_Code_Ambig(int* Nuc_Array,int nb_nuc);
 int MinimumPostProba(phydbl *Proba_Array,int NombreState, phydbl Limit);
 int Assign_State_With_Ambiguity(char *c,int datatype,int stepsize);
 void Clean_Tree_Connections(t_tree *tree);

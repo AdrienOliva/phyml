@@ -2567,14 +2567,68 @@ int Assign_State(char *c, int datatype, int stepsize)
 }
 
 /////////////////////////////////////////////////////////////
-int MinimumPostProba(phydbl *Proba_Array, int NombreState, phydbl Limit){
-    int maxi;
-    int nuc=66;
-    maxi=Get_Max_Arr(Proba_Array,NombreState);
-    if(Proba_Array[maxi]>=Limit){
-            nuc=maxi;
+int Return_Code_Ambig(int* Nuc_Array,int nb_nuc){
+    int code;
+
+    if(nb_nuc==1){
+        code=Nuc_Array[0];
     }
-    return(nuc);
+    else if(nb_nuc==2){
+        if(Nuc_Array[0]==0 && Nuc_Array[1]==1){
+            code=4;
+        }
+        else if(Nuc_Array[0]==0 && Nuc_Array[1]==2){
+            code=5;
+        }
+        else if(Nuc_Array[0]==0 && Nuc_Array[1]==3){
+            code=6;
+        }
+        else if(Nuc_Array[0]==1 && Nuc_Array[1]==2){
+            code=7;
+        }
+        else if(Nuc_Array[0]==1 && Nuc_Array[1]==3){
+            code=8;
+        }
+        else if(Nuc_Array[0]==2 && Nuc_Array[1]==3){
+            code=9;
+        }
+    }
+    else if(nb_nuc==3){
+        if(Nuc_Array[0]==0 && Nuc_Array[1]==1 && Nuc_Array[2]==2){
+            code=13;
+        }
+        else if(Nuc_Array[0]==0 && Nuc_Array[1]==2 && Nuc_Array[2]==3){
+            code=11;
+        }
+        else if(Nuc_Array[0]==0 && Nuc_Array[1]==1 && Nuc_Array[2]==3){
+            code=12;
+        }
+        else if(Nuc_Array[0]==1 && Nuc_Array[1]==2 && Nuc_Array[2]==3){
+            code=10;
+        }
+    }
+    else{
+        code=66;
+    }
+    return(code);
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+int MinimumPostProba(phydbl* Proba_Array, int NombreState, phydbl Limit){
+    int i=0;
+    int count_ambig=0;
+    int code;
+    int nuc[4];
+    while(i<NombreState){
+        if(Proba_Array[i]>=Limit){
+            nuc[count_ambig]=i;
+            count_ambig=count_ambig+1;
+        }
+        i=i+1;
+    }
+    code=Return_Code_Ambig(nuc,count_ambig);
+    return(code);
 }
 //////////////////////////////////////////////////////////////
 int IUPAC_Code(int *Proba_Array, int NbProba){

@@ -2573,6 +2573,7 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
   //ACGT is the order of the Proba_Array
     phydbl PA,PC,PG,PT,PR,PY,PS,PW,PK,PM,PB,PD,PH,PV,PN;
     int indice_min;
+    int *TabsRanked;
 
     PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
     PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
@@ -2596,6 +2597,8 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
     phydbl TableProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
     indice_min=Get_Min_Arr(TableProb,15);
 
+    TabsRanked=Ranks(TableProb,15);
+    indice_min=TabsRanked[0];
     if(indice_min==14) {
         indice_min = 66;
     }

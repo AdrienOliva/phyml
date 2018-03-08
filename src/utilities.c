@@ -2593,13 +2593,20 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
 
     PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
 
-
     phydbl TableProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
     indice_min=Get_Min_Arr(TableProb,15);
 
-    if(indice_min==14){
-        indice_min=66;
+    if(indice_min==14) {
+        indice_min = 66;
     }
+
+    printf("\nProb(A)=%f - Prob(C)=%f - Prob(G)=%f - Prob(T)=%f\n", Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
+    printf("0PA=%f - 1PC=%f - 2PG=%f - 3PT=%f\n", PA,PC,PG,PT);
+    printf("4PR(AG)=%f - 5PY(CT)=%f - 6PS(GC)=%f - 7PW(AT)=%f - 8PK(GT)=%f - 9PM(AC)=%f\n", PR, PY, PS, PW, PK, PM);
+    printf("10PB(CGT)=%f - 11PD(AGT)=%f - 12PH(ACT)=%f - 13PV(ACG)=%f \n", PB, PD, PH, PV);
+    printf("14PN(gap)=%f \n", PN);
+    printf("Choosed: %d\n", indice_min);
+
     return(indice_min);
 }
 //////////////////////////////////////////////////////////////

@@ -2598,7 +2598,7 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
     //indice_min=Get_Min_Arr(TableProb,15);
 
     TabsRanked=Ranks(TableProb,15);
-    indice_min=TabsRanked[0];
+    indice_min=TabsRanked[14];
     if(indice_min==14) {
         indice_min = 66;
     }

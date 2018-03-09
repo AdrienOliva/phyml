@@ -2595,7 +2595,7 @@ int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3)
     PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
 
     phydbl TableProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
-    indice_min=Get_Min_Arr(TableProb,15);
+    //indice_min=Get_Min_Arr(TableProb,15);
 
     TabsRanked=Ranks(TableProb,15);
     indice_min=TabsRanked[0];

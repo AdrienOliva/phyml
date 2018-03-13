@@ -5461,38 +5461,3 @@ phydbl Reflected(phydbl x, phydbl down, phydbl up)
 
   return(ref);
 }
-
-/*/MAX of an array of data, given as input and return the indice of the lower one///////////////////
-////////////////////////////////////////////////////////////*/
-int Get_Max_Arr(phydbl t[], int nb_state){
-  int i=0;
-    int maxi=i;
-    phydbl max;
-  max=t[i];
-  for (i=1;i < nb_state;i++)
-  {
-    if (t[i] > max)
-    {
-        maxi=i;
-      max = t[i];
-    }
-  }
-    return(maxi);
-}
-/*/MIN of an array of data, given as input and return the indice of the lower one///////////////////
-////////////////////////////////////////////////////////////*/
-int Get_Min_Arr(phydbl t[], int nb_state){
-    int i=0;
-    int mini=i;
-    phydbl min;
-    min=t[i];
-    for (i=1;i < nb_state;i++)
-    {
-        if (t[i] < min)
-        {
-            mini=i;
-            min = t[i];
-        }
-    }
-    return(mini);
-}

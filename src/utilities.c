@@ -2570,7 +2570,9 @@ int Assign_State(char *c, int datatype, int stepsize)
 int MinimumPostProba(phydbl *Proba_Array, int NombreState, phydbl Limit){
     int maxi;
     int nuc=66;
-    maxi=Get_Max_Arr(Proba_Array,NombreState);
+    int TabOrder[NombreState];
+    TabOrder=Ranks(Proba_Array,NombreState);
+    maxi=TabOrder[0];
     if(Proba_Array[maxi]>=Limit){
             nuc=maxi;
     }

@@ -3403,7 +3403,7 @@ void Ancestral_Sequences(t_tree *tree, int print)
 
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-
+//This version will construct the ancestral sequence with the highest proba IF it is higher than the treshold set with "limitproba"
 void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
 {
 

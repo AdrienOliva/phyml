@@ -3403,7 +3403,7 @@ void Ancestral_Sequences(t_tree *tree, int print)
 
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-
+//This version will return all nucleotides with a proba > limitproba
 void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
 {
 

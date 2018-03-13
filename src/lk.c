@@ -3403,7 +3403,7 @@ void Ancestral_Sequences(t_tree *tree, int print)
 
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-
+//This version compute the nucleotide with the lowest error
 void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
 {
 

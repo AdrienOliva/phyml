@@ -131,8 +131,7 @@ phydbl *Random_Walk_Generate(phydbl var, int n_steps);
 phydbl *Random_Walk_Bridged_Generate(phydbl start, phydbl end, phydbl var, int n_steps);
 phydbl Dnbinom(phydbl x, phydbl n, phydbl p, int logit);
 phydbl Rnbinom(phydbl n, phydbl p);
-int Get_Max_Arr(phydbl t[],int nb_state);
-int Get_Min_Arr(phydbl t[], int nb_state);
+
 
 
 #endif

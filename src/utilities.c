@@ -2568,7 +2568,7 @@ int Assign_State(char *c, int datatype, int stepsize)
 
 /////////////////////////////////////////////////////////////
 int Return_Code_Ambig(int* Nuc_Array,int nb_nuc){
-    int code;
+    int code=66;
 
     if(nb_nuc==1){
         code=Nuc_Array[0];
@@ -2607,9 +2607,7 @@ int Return_Code_Ambig(int* Nuc_Array,int nb_nuc){
             code=10;
         }
     }
-    else{
-        code=66;
-    }
+
     return(code);
 }
 /////////////////////////////////////////////////////////////

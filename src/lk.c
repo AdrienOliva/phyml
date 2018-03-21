@@ -3418,9 +3418,6 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             int i, j, code;
             int catg;
             char nuc;
-            phydbl Alpha1=(0.0/1.0);
-            phydbl Alpha2=(1.0/6.0);
-            phydbl Alpha3=(1.0/5.0);
             phydbl p0, p1, p2;
             phydbl *p;
             int site, csite;
@@ -3628,7 +3625,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
 
                 if(tree->io->datatype==0){
-                    code=MME_Function(p,Alpha1,Alpha2,Alpha3);
+                    code=MME_Function(p);
                 }
                 else if(tree->io->datatype==1){
                     int *Order_Tab;

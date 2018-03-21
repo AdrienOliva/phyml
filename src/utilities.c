@@ -2569,47 +2569,126 @@ int Assign_State(char *c, int datatype, int stepsize)
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-int MME_Function(phydbl *Proba_Array,phydbl Alpha1,phydbl Alpha2, phydbl Alpha3){
+int MME_Function(phydbl *Proba_Array){
   //ACGT is the order of the Proba_Array
+    phydbl Alpha1=0.0;
+    phydbl Tab_Alpha2[10]={0.05,  0.1 ,  0.15,  0.2 ,  0.25,  0.3 ,  0.35,  0.4 , 0.45,  0.5};
+    phydbl Tab_Alpha3[10]={0.066,  0.132,  0.198,  0.264,  0.33 ,  0.396,  0.462, 0.528,  0.594,  0.66};
+    phydbl Alpha2,Alpha3;
+
+
     phydbl PA,PC,PG,PT,PR,PY,PS,PW,PK,PM,PB,PD,PH,PV,PN;
-    int indice_min;
-    int *TabsRanked;
+    int indice_min,most_indice;
+    int *TabRanked;
+    int SizeTab=0;
 
-    PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-    PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
-    PG=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*(Alpha1))+(Proba_Array[3]*1.0);
-    PT=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*(Alpha1));
-
-    PR=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
-    PY=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));
-    PS=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
-    PW=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));
-    PK=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*(Alpha2));
-    PM=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
-
-    PB=(Proba_Array[0]*(3.0-(3.0*Alpha3)))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
-    PD=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(3.0-(3.0*Alpha3)))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
-    PH=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(3.0-(3.0*Alpha3)))+(Proba_Array[3]*(Alpha3));
-    PV=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(3.0-(3.0*Alpha3)));
-
-    PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
-
-    phydbl TableProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
-
-    TabsRanked=Ranks(TableProb,15);
-    indice_min=TabsRanked[14];
-    if(indice_min==14) {
-        indice_min = 66;
+    //loop to know how long the array should be
+    for(int i=0;i<10;i++){
+        Alpha2=Tab_Alpha2[i];
+        for(int j=0;j<10;j++) {
+            if (Tab_Alpha3[j] <= Alpha2) {
+                continue;
+            } else {
+                SizeTab = SizeTab + 1;
+            }
+        }
     }
 
-    //printf("\nProb(A)=%f - Prob(C)=%f - Prob(G)=%f - Prob(T)=%f\n", Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
-    //printf("0PA=%f - 1PC=%f - 2PG=%f - 3PT=%f\n", PA,PC,PG,PT);
-    //printf("4PR(AG)=%f - 5PY(CT)=%f - 6PS(GC)=%f - 7PW(AT)=%f - 8PK(GT)=%f - 9PM(AC)=%f\n", PR, PY, PS, PW, PK, PM);
-    //printf("10PB(CGT)=%f - 11PD(AGT)=%f - 12PH(ACT)=%f - 13PV(ACG)=%f \n", PB, PD, PH, PV);
-    //printf("14PN(gap)=%f \n", PN);
-    //printf("Choosed: %d\n", indice_min);
+    int TabAllBest[SizeTab];
+    int counter=0;
+    for(int i=0;i<10;i++){
+        Alpha2=Tab_Alpha2[i];
+        for(int j=0;j<10;j++){
+            if(Tab_Alpha3[j]<=Alpha2){
+                continue;
+            }
+            else{
+                Alpha3=Tab_Alpha3[j];
+                PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
+                PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
+                PG=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*(Alpha1))+(Proba_Array[3]*1.0);
+                PT=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*(Alpha1));
 
-    return(indice_min);
+                PR=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
+                PY=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));
+                PS=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
+                PW=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*(Alpha2));
+                PK=(Proba_Array[0]*((3.0/2.0)-Alpha2))+(Proba_Array[1]*((3.0/2.0)-Alpha2))+(Proba_Array[2]*(Alpha2))+(Proba_Array[3]*(Alpha2));
+                PM=(Proba_Array[0]*(Alpha2))+(Proba_Array[1]*(Alpha2))+(Proba_Array[2]*((3.0/2.0)-Alpha2))+(Proba_Array[3]*((3.0/2.0)-Alpha2));
+
+                PB=(Proba_Array[0]*(3.0-(3.0*Alpha3)))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
+                PD=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(3.0-(3.0*Alpha3)))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(Alpha3));
+                PH=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(3.0-(3.0*Alpha3)))+(Proba_Array[3]*(Alpha3));
+                PV=(Proba_Array[0]*(Alpha3))+(Proba_Array[1]*(Alpha3))+(Proba_Array[2]*(Alpha3))+(Proba_Array[3]*(3.0-(3.0*Alpha3)));
+
+                PN=(Proba_Array[0]*(3.0/4.0))+(Proba_Array[1]*(3.0/4.0))+(Proba_Array[2]*(3.0/4.0))+(Proba_Array[3]*(3.0/4.0));
+
+                phydbl TabProb[15]={PA,PC,PG,PT,PM,PR,PW,PS,PY,PK,PB,PD,PH,PV,PN};
+
+                TabRanked=Ranks(TabProb,15);
+                indice_min=TabRanked[14];
+                if(indice_min==14) {
+                    indice_min = 66;
+                }
+                Free(TabRanked);
+                TabAllBest[counter]=indice_min;
+                counter=counter+1;
+                //printf("\nProb(A)=%f - Prob(C)=%f - Prob(G)=%f - Prob(T)=%f\n", Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
+                //printf("0PA=%f - 1PC=%f - 2PG=%f - 3PT=%f\n", PA,PC,PG,PT);
+                //printf("4PR(AG)=%f - 5PY(CT)=%f - 6PS(GC)=%f - 7PW(AT)=%f - 8PK(GT)=%f - 9PM(AC)=%f\n", PR, PY, PS, PW, PK, PM);
+                //printf("10PB(CGT)=%f - 11PD(AGT)=%f - 12PH(ACT)=%f - 13PV(ACG)=%f \n", PB, PD, PH, PV);
+                //printf("14PN(gap)=%f \n", PN);
+                //printf("Choosed: %d\n", indice_min);
+            }
+        }
+    }
+
+    most_indice=Find_Most_Frequent_Int(TabAllBest,SizeTab);
+    return(most_indice);
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+int Find_Most_Frequent_Int(int *Array,int Size){
+    int *TabRanked;
+    phydbl Dbl_Array[Size];
+    phydbl valmax,val;
+    int valmax_int;
+    int countmax,count=0;
+
+//    printf("Array: [%d", Array[0]);
+//    for(int i=1;i<Size;i++){
+//        printf(", %d", Array[i]);
+//    }
+//    printf("]\n");
+
+
+    //transform the int array to dbl array to be able to use Ranks function
+    for(int i=0;i<Size;i++){
+        Dbl_Array[i]= (phydbl)Array[i];
+    }
+    TabRanked=Ranks(Dbl_Array,Size);
+    count=1;
+    countmax=1;
+    valmax=Dbl_Array[TabRanked[0]];
+    val=Dbl_Array[TabRanked[0]];
+    for(int j=1;j<Size;j++){
+//        printf("Tabranked=%f / val=%f\n",TabRanked[j],val);
+        if(Dbl_Array[TabRanked[j]]==val){
+            count=count+1;
+        }
+        else{
+            if(count>countmax){
+                countmax=count;
+                valmax=val;
+            }
+            val=Dbl_Array[TabRanked[j]];
+            count=1;
+        }
+    }
+    valmax_int=(int) valmax;
+//    printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
+    return(valmax_int);
 }
 //////////////////////////////////////////////////////////////
 

@@ -2686,6 +2686,11 @@ int Find_Most_Frequent_Int(int *Array,int Size){
             count=1;
         }
     }
+
+    if(count>countmax){
+        valmax=val;
+    }
+
     valmax_int=(int) valmax;
 //    printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
     return(valmax_int);

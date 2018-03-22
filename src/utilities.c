@@ -2633,12 +2633,11 @@ int MinimumPostProba(phydbl* Proba_Array, int NombreState){
     for(int i=0;i<55;i++){
         Limit=TabLimit[i];
         count_ambig=0;
-        while(i<NombreState){
-            if(Proba_Array[i]>=Limit){
-                nuc[count_ambig]=i;
+        for(int j=0;j<NombreState;j++){
+            if(Proba_Array[j]>=Limit){
+                nuc[count_ambig]=j;
                 count_ambig=count_ambig+1;
             }
-            i=i+1;
         }
         code=Return_Code_Ambig(nuc,count_ambig);
         TabAllBest[i]=code;
@@ -2657,11 +2656,11 @@ int Find_Most_Frequent_Int(int *Array,int Size){
     int valmax_int;
     int countmax,count=0;
 
-    printf("Array: [%d", Array[0]);
-    for(int i=1;i<Size;i++){
-        printf(", %d", Array[i]);
-    }
-    printf("]\n");
+//    printf("Array: [%d", Array[0]);
+//    for(int i=1;i<Size;i++){
+//        printf(", %d", Array[i]);
+//    }
+//    printf("]\n");
 
 
     //transform the int array to dbl array to be able to use Ranks function
@@ -2674,7 +2673,7 @@ int Find_Most_Frequent_Int(int *Array,int Size){
     valmax=Dbl_Array[TabRanked[0]];
     val=Dbl_Array[TabRanked[0]];
     for(int j=1;j<Size;j++){
-                printf("Tabranked=%f / val=%f\n",Dbl_Array[TabRanked[j]],val);
+//                printf("valmax=%f / val=%f / count=%d / countmax=%d\n",valmax,val,count,countmax);
         if(Dbl_Array[TabRanked[j]]==val){
             count=count+1;
         }
@@ -2687,8 +2686,12 @@ int Find_Most_Frequent_Int(int *Array,int Size){
             count=1;
         }
     }
+
+    if(count>countmax){
+        valmax=val;
+    }
     valmax_int=(int) valmax;
-        printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
+//        printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
     return(valmax_int);
 }
 //////////////////////////////////////////////////////////////

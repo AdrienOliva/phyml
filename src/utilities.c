@@ -2613,21 +2613,86 @@ int Return_Code_Ambig(int* Nuc_Array,int nb_nuc){
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-int MinimumPostProba(phydbl* Proba_Array, int NombreState, phydbl Limit){
-    int i=0;
-    int count_ambig=0;
+int MinimumPostProba(phydbl* Proba_Array, int NombreState){
+    phydbl TabLimit[55]={ 0.0       ,  0.00925926,  0.01851852,  0.02777778,  0.03703704,
+    0.0462963 ,  0.05555556,  0.06481481,  0.07407407,  0.08333333,
+    0.09259259,  0.10185185,  0.11111111,  0.12037037,  0.12962963,
+    0.13888889,  0.14814815,  0.15740741,  0.16666667,  0.17592593,
+    0.18518519,  0.19444444,  0.2037037 ,  0.21296296,  0.22222222,
+    0.23148148,  0.24074074,  0.25      ,  0.25925926,  0.26851852,
+    0.27777778,  0.28703704,  0.2962963 ,  0.30555556,  0.31481481,
+    0.32407407,  0.33333333,  0.34259259,  0.35185185,  0.36111111,
+    0.37037037,  0.37962963,  0.38888889,  0.39814815,  0.40740741,
+    0.41666667,  0.42592593,  0.43518519,  0.44444444,  0.4537037 ,
+    0.46296296,  0.47222222,  0.48148148,  0.49074074,  0.5};
+    int TabAllBest[55];
+    phydbl Limit;
+    int count_ambig;
     int code;
     int nuc[4];
-    while(i<NombreState){
-        if(Proba_Array[i]>=Limit){
-            nuc[count_ambig]=i;
-            count_ambig=count_ambig+1;
+    for(int i=0;i<55;i++){
+        Limit=TabLimit[i];
+        count_ambig=0;
+        while(i<NombreState){
+            if(Proba_Array[i]>=Limit){
+                nuc[count_ambig]=i;
+                count_ambig=count_ambig+1;
+            }
+            i=i+1;
         }
-        i=i+1;
+        code=Return_Code_Ambig(nuc,count_ambig);
+        TabAllBest[i]=code;
     }
-    code=Return_Code_Ambig(nuc,count_ambig);
+    code=Find_Most_Frequent_Int(TabAllBest,55);
     return(code);
 }
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+int Find_Most_Frequent_Int(int *Array,int Size){
+    int *TabRanked;
+    phydbl Dbl_Array[Size];
+    phydbl valmax,val;
+    int valmax_int;
+    int countmax,count=0;
+
+    printf("Array: [%d", Array[0]);
+    for(int i=1;i<Size;i++){
+        printf(", %d", Array[i]);
+    }
+    printf("]\n");
+
+
+    //transform the int array to dbl array to be able to use Ranks function
+    for(int i=0;i<Size;i++){
+        Dbl_Array[i]= (phydbl)Array[i];
+    }
+    TabRanked=Ranks(Dbl_Array,Size);
+    count=1;
+    countmax=1;
+    valmax=Dbl_Array[TabRanked[0]];
+    val=Dbl_Array[TabRanked[0]];
+    for(int j=1;j<Size;j++){
+                printf("Tabranked=%f / val=%f\n",Dbl_Array[TabRanked[j]],val);
+        if(Dbl_Array[TabRanked[j]]==val){
+            count=count+1;
+        }
+        else{
+            if(count>countmax){
+                countmax=count;
+                valmax=val;
+            }
+            val=Dbl_Array[TabRanked[j]];
+            count=1;
+        }
+    }
+    valmax_int=(int) valmax;
+        printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
+    return(valmax_int);
+}
+//////////////////////////////////////////////////////////////
+
 //////////////////////////////////////////////////////////////
 int IUPAC_Code(int *Proba_Array, int NbProba){
     int code=67;

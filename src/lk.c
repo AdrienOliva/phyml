@@ -3418,7 +3418,6 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
             int i, j, code;
             int catg;
             char nuc;
-            phydbl limitproba=1.0;
             phydbl p0, p1, p2;
             phydbl *p;
             int site, csite;
@@ -3626,7 +3625,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
 
 
-                code=MinimumPostProba(p,ns,limitproba);
+                code=MinimumPostProba(p,ns);
                 nuc =  Reciproc_Assign_State(code, tree->io->datatype);
 
                 d->c_seq_anc->state[site] = nuc;

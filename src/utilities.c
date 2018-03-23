@@ -2567,18 +2567,96 @@ int Assign_State(char *c, int datatype, int stepsize)
 }
 
 /////////////////////////////////////////////////////////////
-int MinimumPostProba(phydbl *Proba_Array, int NombreState, phydbl Limit){
+int MinimumPostProba(phydbl *Proba_Array, int NombreState){
+    phydbl TabLimit[100]={ 0.25      ,  0.25757576,  0.26515152,  0.27272727,  0.28030303,
+            0.28787879,  0.29545455,  0.3030303 ,  0.31060606,  0.31818182,
+            0.32575758,  0.33333333,  0.34090909,  0.34848485,  0.35606061,
+            0.36363636,  0.37121212,  0.37878788,  0.38636364,  0.39393939,
+            0.40151515,  0.40909091,  0.41666667,  0.42424242,  0.43181818,
+            0.43939394,  0.4469697 ,  0.45454545,  0.46212121,  0.46969697,
+            0.47727273,  0.48484848,  0.49242424,  0.5       ,  0.50757576,
+            0.51515152,  0.52272727,  0.53030303,  0.53787879,  0.54545455,
+            0.5530303 ,  0.56060606,  0.56818182,  0.57575758,  0.58333333,
+            0.59090909,  0.59848485,  0.60606061,  0.61363636,  0.62121212,
+            0.62878788,  0.63636364,  0.64393939,  0.65151515,  0.65909091,
+            0.66666667,  0.67424242,  0.68181818,  0.68939394,  0.6969697 ,
+            0.70454545,  0.71212121,  0.71969697,  0.72727273,  0.73484848,
+            0.74242424,  0.75      ,  0.75757576,  0.76515152,  0.77272727,
+            0.78030303,  0.78787879,  0.79545455,  0.8030303 ,  0.81060606,
+            0.81818182,  0.82575758,  0.83333333,  0.84090909,  0.84848485,
+            0.85606061,  0.86363636,  0.87121212,  0.87878788,  0.88636364,
+            0.89393939,  0.90151515,  0.90909091,  0.91666667,  0.92424242,
+            0.93181818,  0.93939394,  0.9469697 ,  0.95454545,  0.96212121,
+            0.96969697,  0.97727273,  0.98484848,  0.99242424,  1.        };
     int maxi;
-    int nuc=66;
+    int nuc;
     int *TabOrder;
+    phydbl Limit;
+    int TabAllBest[100];
     TabOrder=Ranks(Proba_Array,NombreState);
     maxi=TabOrder[0];
     Free(TabOrder);
-    if(Proba_Array[maxi]>=Limit){
+    for(int i=0;i<100;i++){
+        Limit=TabLimit[i];
+        if(Proba_Array[maxi]>=Limit){
             nuc=maxi;
+        }
+        else{
+            nuc=66;
+        }
+        TabAllBest[i]=nuc;
     }
+    nuc=Find_Most_Frequent_Int(TabAllBest,100);
     return(nuc);
 }
+
+//////////////////////////////////////////////////////////////
+int Find_Most_Frequent_Int(int *Array,int Size){
+    int *TabRanked;
+    phydbl Dbl_Array[Size];
+    phydbl valmax,val;
+    int valmax_int;
+    int countmax,count=0;
+
+//    printf("Array: [%d", Array[0]);
+//    for(int i=1;i<Size;i++){
+//        printf(", %d", Array[i]);
+//    }
+//    printf("]\n");
+
+
+    //transform the int array to dbl array to be able to use Ranks function
+    for(int i=0;i<Size;i++){
+        Dbl_Array[i]= (phydbl)Array[i];
+    }
+    TabRanked=Ranks(Dbl_Array,Size);
+    count=1;
+    countmax=1;
+    valmax=Dbl_Array[TabRanked[0]];
+    val=Dbl_Array[TabRanked[0]];
+    for(int j=1;j<Size;j++){
+//                printf("valmax=%f / val=%f / count=%d / countmax=%d\n",valmax,val,count,countmax);
+        if(Dbl_Array[TabRanked[j]]==val){
+            count=count+1;
+        }
+        else{
+            if(count>countmax){
+                countmax=count;
+                valmax=val;
+            }
+            val=Dbl_Array[TabRanked[j]];
+            count=1;
+        }
+    }
+
+    if(count>countmax){
+        valmax=val;
+    }
+    valmax_int=(int) valmax;
+//        printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
+    return(valmax_int);
+}
+
 //////////////////////////////////////////////////////////////
 int IUPAC_Code(int *Proba_Array, int NbProba){
     int code=67;

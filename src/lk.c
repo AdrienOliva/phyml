@@ -3625,7 +3625,7 @@ void Ancestral_Sequences_One_Node(t_node *d, t_tree *tree, int print)
                 for (i = 0; i < ns; i++) p[i] = exp(p[i]);
 
                 if(tree->io->datatype==0){
-                    code=MME_Function(p);
+                    code=MEE_Function(p);
                 }
                 else if(tree->io->datatype==1){
                     int *Order_Tab;

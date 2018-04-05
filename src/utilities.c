@@ -2569,7 +2569,7 @@ int Assign_State(char *c, int datatype, int stepsize)
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-int MME_Function(phydbl *Proba_Array){
+int MEE_Function(phydbl *Proba_Array){
   //ACGT is the order of the Proba_Array
     phydbl Alpha1=0.0;
     phydbl Tab_Alpha2[10]={0.05,  0.1 ,  0.15,  0.2 ,  0.25,  0.3 ,  0.35,  0.4 , 0.45,  0.5};

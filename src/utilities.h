@@ -2022,7 +2022,7 @@ int Get_State_From_Ui(int ui,int datatype);
 int Assign_State(char *c,int datatype,int stepsize);
 char Reciproc_Assign_State(int i_state,int datatype);
 int IUPAC_Code(int *Proba_Array, int NbProba);
-int MME_Function(phydbl *Proba_Arra);
+int MEE_Function(phydbl *Proba_Arra);
 int Find_Most_Frequent_Int(int *Array, int Size);
 int Assign_State_With_Ambiguity(char *c,int datatype,int stepsize);
 void Clean_Tree_Connections(t_tree *tree);

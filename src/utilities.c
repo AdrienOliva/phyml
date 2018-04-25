@@ -2572,38 +2572,69 @@ int Assign_State(char *c, int datatype, int stepsize)
 int MEE_Function(phydbl *Proba_Array){
   //ACGT is the order of the Proba_Array
     phydbl Alpha1=0.0;
-    phydbl Tab_Alpha2[10]={0.05,  0.1 ,  0.15,  0.2 ,  0.25,  0.3 ,  0.35,  0.4 , 0.45,  0.5};
-    phydbl Tab_Alpha3[10]={0.066,  0.132,  0.198,  0.264,  0.33 ,  0.396,  0.462, 0.528,  0.594,  0.66};
     phydbl Alpha2,Alpha3;
+    phydbl alpha_2_min;
+    phydbl alpha_2_max;
+    phydbl alpha_3_min;
+    phydbl alpha_3_max;
 
+    alpha_2_min=0.0; alpha_2_max=1.0/2.0;
+    alpha_3_min=0.0; alpha_3_max=2.0/3.0;
+    int mesh_size=10;
+
+    int i2,i3;
+    int SizeTab=0;
 
     phydbl PA,PC,PG,PT,PR,PY,PS,PW,PK,PM,PB,PD,PH,PV,PN;
     int indice_min,most_indice;
     int *TabRanked;
-    int SizeTab=0;
 
-    //loop to know how long the array should be
-    for(int i=0;i<10;i++){
-        Alpha2=Tab_Alpha2[i];
-        for(int j=0;j<10;j++) {
-            if (Tab_Alpha3[j] <= Alpha2) {
-                continue;
-            } else {
+    //    //loop to know how long the array should be
+    for(i2=0; i2<mesh_size; ++i2)
+    {
+        Alpha2 = alpha_2_min +
+                 i2*(alpha_2_max-alpha_2_min)/(double)(mesh_size-1);
+
+        for(i3=0; i3<mesh_size; ++i3)
+        {
+            Alpha3 = alpha_3_min +
+                     i3*(alpha_3_max-alpha_3_min)/(double)(mesh_size-1);
+
+            if(Alpha3 >= Alpha2){
                 SizeTab = SizeTab + 1;
             }
+
         }
     }
 
+
+//    int SizeTab=0;
+//
+//    //loop to know how long the array should be
+//    for(int i=0;i<10;i++){
+//        Alpha2=Tab_Alpha2[i];
+//        for(int j=0;j<10;j++) {
+//            if (Tab_Alpha3[j] <= Alpha2) {
+//                continue;
+//            } else {
+//                SizeTab = SizeTab + 1;
+//            }
+//        }
+//    }
+
     int TabAllBest[SizeTab];
     int counter=0;
-    for(int i=0;i<10;i++){
-        Alpha2=Tab_Alpha2[i];
-        for(int j=0;j<10;j++){
-            if(Tab_Alpha3[j]<=Alpha2){
-                continue;
-            }
-            else{
-                Alpha3=Tab_Alpha3[j];
+    for(i2=0; i2<mesh_size; ++i2)
+    {
+        Alpha2 = alpha_2_min +
+                 i2*(alpha_2_max-alpha_2_min)/(double)(mesh_size-1);
+
+        for(i3=0; i3<mesh_size; ++i3)
+        {
+            Alpha3 = alpha_3_min +
+                     i3*(alpha_3_max-alpha_3_min)/(double)(mesh_size-1);
+
+            if(Alpha3 >= Alpha2){
                 PA=(Proba_Array[0]*(Alpha1))+(Proba_Array[1]*1.0)+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
                 PC=(Proba_Array[0]*1.0)+(Proba_Array[1]*(Alpha1))+(Proba_Array[2]*1.0)+(Proba_Array[3]*1.0);
                 PG=(Proba_Array[0]*1.0)+(Proba_Array[1]*1.0)+(Proba_Array[2]*(Alpha1))+(Proba_Array[3]*1.0);
@@ -2627,18 +2658,24 @@ int MEE_Function(phydbl *Proba_Array){
 
                 TabRanked=Ranks(TabProb,15);
                 indice_min=TabRanked[14];
+//                printf("\n\nTabRanked = [%d", TabRanked[0]);
+//                for(int v = 1; v < 15; v++)
+//                    printf(", %d", TabRanked[v]);
+//                printf("]\n");
+
                 if(indice_min==14) {
                     indice_min = 66;
                 }
                 Free(TabRanked);
                 TabAllBest[counter]=indice_min;
                 counter=counter+1;
-                //printf("\nProb(A)=%f - Prob(C)=%f - Prob(G)=%f - Prob(T)=%f\n", Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
-                //printf("0PA=%f - 1PC=%f - 2PG=%f - 3PT=%f\n", PA,PC,PG,PT);
-                //printf("4PR(AG)=%f - 5PY(CT)=%f - 6PS(GC)=%f - 7PW(AT)=%f - 8PK(GT)=%f - 9PM(AC)=%f\n", PR, PY, PS, PW, PK, PM);
-                //printf("10PB(CGT)=%f - 11PD(AGT)=%f - 12PH(ACT)=%f - 13PV(ACG)=%f \n", PB, PD, PH, PV);
-                //printf("14PN(gap)=%f \n", PN);
-                //printf("Choosed: %d\n", indice_min);
+//                printf("\nMME Function prints: Alpha2=%f / Alpha3=%f", Alpha2,Alpha3);
+//                printf("\nProb(A)=%f - Prob(C)=%f - Prob(G)=%f - Prob(T)=%f\n", Proba_Array[0],Proba_Array[1],Proba_Array[2],Proba_Array[3]);
+//                printf("0PA=%f - 1PC=%f - 2PG=%f - 3PT=%f\n", PA,PC,PG,PT);
+//                printf("4PM(AC)=%f - 5PR(AG)=%f - 6PW(AT)=%f - 7PS(GC)=%f - 8PY(CT)=%f - 9PK(GT)=%f\n", PM, PR, PW, PS, PY, PK);
+//                printf("10PB(CGT)=%f - 11PD(AGT)=%f - 12PH(ACT)=%f - 13PV(ACG)=%f \n", PB, PD, PH, PV);
+//                printf("14PN(gap)=%f \n", PN);
+//                printf("Choosed: %d\n", indice_min);
             }
         }
     }
@@ -2656,6 +2693,7 @@ int Find_Most_Frequent_Int(int *Array,int Size){
     int valmax_int;
     int countmax,count=0;
 
+//    printf("\nMost Frequent prints:");
 //    printf("Array: [%d", Array[0]);
 //    for(int i=1;i<Size;i++){
 //        printf(", %d", Array[i]);
@@ -2674,7 +2712,7 @@ int Find_Most_Frequent_Int(int *Array,int Size){
     val=Dbl_Array[TabRanked[0]];
     for(int j=1;j<Size;j++){
 //        printf("Tabranked=%f / val=%f\n",TabRanked[j],val);
-        if(Dbl_Array[TabRanked[j]]==val){
+        if(Are_Equal(Dbl_Array[TabRanked[j]],val,1.E-5) == YES) {
             count=count+1;
         }
         else{
@@ -2688,11 +2726,12 @@ int Find_Most_Frequent_Int(int *Array,int Size){
     }
 
     if(count>countmax){
+        countmax=count;
         valmax=val;
     }
 
     valmax_int=(int) valmax;
-//    printf("valmax: %lf\tvalmax_int: %d\n", valmax, valmax_int);
+//    printf("countmax: %d\tvalmax_int: %d\n", countmax, valmax_int);
     return(valmax_int);
 }
 //////////////////////////////////////////////////////////////

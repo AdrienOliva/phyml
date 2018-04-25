@@ -5344,7 +5344,7 @@ int *Ranks(phydbl *x, int len)
         {
           if(x[rk[i]] < x[rk[i+1]])
             {
-              swap  = YES; 
+              swap  = YES;
               tmp   = rk[i];
               rk[i] = rk[i+1];
               rk[i+1] = tmp;

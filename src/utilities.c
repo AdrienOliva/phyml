@@ -2649,6 +2649,13 @@ int MinimumPostProba(phydbl* Proba_Array, int NombreState){
             }
         }
         code=Return_Code_Ambig(nuc,count_ambig);
+//        if there is no proba > limit so we take the highest proba
+        if(code==66){
+          int *TabRanked;
+          TabRanked=Ranks(Proba_Array,4);
+          code=TabRanked[0];
+        }
+      
         TabAllBest[i]=code;
     }
     code=Find_Most_Frequent_Int(TabAllBest,100);

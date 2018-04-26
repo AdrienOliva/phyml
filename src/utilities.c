@@ -2654,8 +2654,9 @@ int MinimumPostProba(phydbl* Proba_Array, int NombreState){
           int *TabRanked;
           TabRanked=Ranks(Proba_Array,4);
           code=TabRanked[0];
+          Free(TabRanked);
         }
-      
+
         TabAllBest[i]=code;
     }
     code=Find_Most_Frequent_Int(TabAllBest,100);
